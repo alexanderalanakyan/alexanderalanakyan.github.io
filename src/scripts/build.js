@@ -9,6 +9,8 @@ function runTsc() {
     if (err) {
       console.error("tsc failed:", err.message);
       process.exit(1);
+    } else {
+      console.log(`✓ built typescript successfully`);
     }
   });
 }

@@ -16,9 +16,10 @@ const contentTypes: Record<string, string> = {
   ".ico": "image/x-icon",
 };
 
+const server = 
 http
   .createServer((req, res) => {
-    const urlPath = req.url === "/" ? "/pages/index.html" : req.url || "/";
+    const urlPath = req.url === "/" ? "/data/www/index.html" : req.url || "/";
     const normalized = path.normalize(urlPath).replace(/^(\.\.[/\\])+/, "");
     const filePath = path.join(publicDir, normalized);
 
@@ -37,5 +38,5 @@ http
     });
   })
   .listen(8080, () => {
-    console.log("Server is running on http://localhost:8080/pages/index.html");
-  }); 
+    console.log("Server is running on http://localhost:8080");
+  });
