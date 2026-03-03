@@ -50,13 +50,22 @@ const contentTypes = {
 };
 const server = http
     .createServer((req, res) => {
-    const urlPath = req.url === "/" ? "/data/www/index.html" : req.url || "/";
+    const requestUrl = new URL(req.url || "/", "http://localhost");
+    const urlPath = requestUrl.pathname === "/" ? "/data/www/index.html" : requestUrl.pathname;
     const normalized = path.normalize(urlPath).replace(/^(\.\.[/\\])+/, "");
-    const filePath = path.join(publicDir, normalized);
+    const relativePath = normalized.replace(/^[/\\]+/, "");
+    const filePath = path.join(publicDir, relativePath);
     fs.readFile(filePath, (err, data) => {
         if (err) {
-            res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
-            res.end("Not Found");
+            res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+            fs.readFile(path.join(publicDir, "data/www/404.html"), (err404, data404) => {
+                if (err404) {
+                    res.end("<p>404 Not Found</p>");
+                }
+                else {
+                    res.end(data404);
+                }
+            });
             return;
         }
         const ext = path.extname(filePath).toLowerCase();
@@ -68,7 +77,4 @@ const server = http
 })
     .listen(8080, () => {
     console.log("Server is running on http://localhost:8080");
-});
-server.on("request", (req) => {
-    console.log(req);
 });

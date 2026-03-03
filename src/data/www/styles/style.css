@@ -1,33 +1,4 @@
-
-
-
-
-
-@keyframes colorCycle {
-  10%   { color: red; }
-  35%  { color: yellow; }
-  60%  { color: green; }
-  85%  { color: blue; }
-  100% { color: red; }
-}
-.sidebar {
-    color:black
-}
-
-.siderbar a {
-    color: black;
-    text-decoration: none;
-    background-color: aqua;
-}
-.sidebar a:hover {
-    color: inherit;
-    animation: colorCycle 5s infinite;
-    background-color: yellow;
-}
-
-.siderbar a:visited a:active{
+.sidebar a:visited {
     color: inherit;
     text-decoration: inherit;
-    background-color: inherit;
 }
-
