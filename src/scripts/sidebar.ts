@@ -1,28 +1,37 @@
-const pages = "./pages";
-const htmlPages: string[] = ["homepage.html", "index.html", "pageTemplate.html"];
+document.addEventListener("DOMContentLoaded", async () => {
+    const list = document.createElement("ul");
+    list.id = "sidebar-links-list";
 
-document.addEventListener("DOMContentLoaded", () => {
-        const list = document.createElement("ul")
-        list.id = "sidebar-links-list"
-        let sidebar = document.querySelector(".sidebar") || null
+    let sidebar = document.querySelector(".sidebar");
+    if (!sidebar) {
+        sidebar = document.createElement("div");
+        sidebar.className = "sidebar";
+        document.body.appendChild(sidebar);
+    }
 
-        if(!sidebar) 
-            {
-            sidebar = document.createElement("div")
-            sidebar.className = "sidebar"
-            } 
-        sidebar.appendChild(list)
-       htmlPages.forEach((page) => { 
+    sidebar.appendChild(list);
 
-       
-            const li = document.createElement("ul")
-            const link = document.createElement("a")
-            link.href=`${page}`
+    try {
+        const response = await fetch("../www/pages.json");
+        if (!response.ok) {
+            throw new Error(`pages.json request failed with ${response.status}`);
+        }
+
+        const htmlPages = (await response.json()) as string[];
+        console.log("Loaded pages:", htmlPages);
+
+        htmlPages.forEach((page) => {
+            const li = document.createElement("li");
+            const link = document.createElement("a");
+            link.href = page;
             link.textContent = page;
-            li.appendChild(link)
-            list.appendChild(li)
-        })
-}) 
+            li.appendChild(link);
+            list.appendChild(li);
+        });
+    } catch (error) {
+        console.error("Sidebar failed to load pages", error);
+    }
+});
 
 
 

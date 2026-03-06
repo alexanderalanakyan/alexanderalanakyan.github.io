@@ -34,8 +34,8 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 const http = __importStar(require("node:http"));
+const fs = __importStar(require("node:fs"));
 const path = __importStar(require("node:path"));
-const ignoredPaths = ["../www/", "404.html"];
 const publicDir = path.resolve(__dirname, ".."); // dist root after build
 const contentTypes = {
     ".html": "text/html; charset=utf-8",
@@ -50,8 +50,27 @@ const contentTypes = {
 };
 const server = http
     .createServer((req, res) => {
-    if (req.url) {
-    }
+    const url = req.url || "/";
+    const filePath = path.join(publicDir, url === "/" ? "www/index.html" : url);
+    const ext = path.extname(filePath);
+    const contentType = contentTypes[ext] || "application/octet-stream";
+    const data = fs.readFile(filePath, (err, data) => {
+        if (err) {
+            res.writeHead(404, { "content-type": "text/html; charset=utf-8" });
+            fs.readFile(path.join(publicDir, "www/404.html"), (err404, data404) => {
+                if (err404) {
+                    res.end("<h1>404 Not Found</h1>");
+                }
+                else {
+                    res.end(data404);
+                }
+            });
+        }
+        else {
+            res.writeHead(200, { "content-type": contentType });
+            res.end(data);
+        }
+    });
 })
     .listen(8080, () => {
     console.log("Server is running on http://localhost:8080");
