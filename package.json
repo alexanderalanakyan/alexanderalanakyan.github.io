@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0"
+  },
+ "scripts": {
+  "build": "node src/scripts/build.js",
+  "dev": "node src/scripts/build.js && node dist/scripts/index.js",
+  "server": "node dist/scripts/index.js"
+}, 
+  "main": "src/scripts/build.js"
+}
